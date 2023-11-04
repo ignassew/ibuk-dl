@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ibuk-dl"
+version = "0.1"
+authors = [{ name = "Ignacy Sewastianowicz", email = "szpiren@gmail.com" }]
+description = "Download books from libra.ibuk.pl"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: End Users/Desktop"
+]
+
+[project.scripts]
+ibuk-dl = "ibuk_dl.main:run_main"
+
+[project.urls]
+"Homepage" = "https://github.com/ignassew/ibuk-dl"
