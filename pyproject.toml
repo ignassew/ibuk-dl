@@ -12,8 +12,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Intended Audience :: End Users/Desktop"
+    "Intended Audience :: End Users/Desktop",
 ]
+dependencies = ["beautifulsoup4", "requests", "websockets"]
 
 [project.scripts]
 ibuk-dl = "ibuk_dl.main:run_main"

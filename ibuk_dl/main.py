@@ -294,6 +294,7 @@ async def main():
     elif args.action == "query":
         await query_action(args.url, ibs)
 
+
 def run_main():
     asyncio.run(main())
 
