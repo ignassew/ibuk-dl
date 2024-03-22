@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ibuk-dl"
-version = "0.1"
+version = "0.2"
 authors = [{ name = "Ignacy Sewastianowicz", email = "szpiren@gmail.com" }]
 description = "Download books from libra.ibuk.pl"
 readme = "README.md"
