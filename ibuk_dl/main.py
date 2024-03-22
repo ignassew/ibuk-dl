@@ -92,7 +92,8 @@ class IbukWebSocketSession:
 
     async def _connect(self):
         self.ws = await websockets.connect(
-            f"wss://{self._socket_io_base_url}/?apiKey={self._api_key}&isServer=0&EIO=4&transport=websocket&sid={self._create_session()}"
+            f"wss://{self._socket_io_base_url}/?apiKey={self._api_key}&isServer=0&EIO=4&transport=websocket&sid={self._create_session()}",
+            max_size=None
         )
 
         await self._hello()
@@ -147,7 +148,11 @@ class IbukWebSocketSession:
         )
         r = await self._handle_recv()
 
-        return json.loads(json.loads(r.split("42/books,")[1])[1])["html"]
+        data = json.loads(json.loads(r.split("42/books,")[1])[1])
+        if data.get("error", False):
+            logging.error(f"encountered while fetching page {page}: {data.get('message', '')}")
+            raise PermissionError("Error while fetching page")
+        return data["html"]
 
     async def get_css(self, book_id):
         await self.ws.send(
@@ -174,7 +179,11 @@ class IbukWebSocketSession:
         pages = []
         for i in range(1, page_n + 1):
             logging.info(f"Getting page {i}")
-            pages.append(await self.get_page(book_id, i))
+            try:
+                page = await self.get_page(book_id, i)
+            except PermissionError:
+                break
+            pages.append(page)
 
         pages = "\n".join(pages)
         html = f"""
@@ -218,6 +227,8 @@ async def download_action(
         output.write("\n")
     finally:
         output.close()
+
+    logging.info(f"Downloaded {book_metadata.author} - {book_metadata.title} pages to {output.name}")
 
 
 async def query_action(url: str, ibs: IbukWebSession):
