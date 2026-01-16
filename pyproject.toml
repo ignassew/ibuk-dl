@@ -14,7 +14,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Intended Audience :: End Users/Desktop",
 ]
-dependencies = ["beautifulsoup4", "requests", "websockets"]
+dependencies = ["beautifulsoup4", "requests", "websockets", "pypdf", "pyppeteer", "lxml"]
 
 [project.scripts]
 ibuk-dl = "ibuk_dl.main:run_main"

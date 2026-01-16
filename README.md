@@ -14,55 +14,66 @@ This script allows you to download books from the libra.ibuk.pl website and quer
 pip install ibuk-dl
 ```
 
+## Running from Source (with uv)
+
+If you are using fork directly without installing it, you can run it using [uv](https://github.com/astral-sh/uv):
+
+```shell
+# Run directly
+uv run ibuk-dl <args>
+
+# Example
+uv run ibuk-dl https://libra.ibuk.pl/reader/book-url -u email@example.com -p password
+```
+
 ## Usage
+ 
+### Download a Book (Auto-Convert to PDF)
 
-### Download a Book
-
-To download a book, use the following command:
-
-```shell
-ibuk-dl download <URL>
-```
-
-You can specify the page count with the `--page-count` option (if not specified, will download every page) and the output file with the `-o` or `--output` option. Use `-` as the output to print the book content to stdout. Add -v to print progress information to the console.
-
-If the book is behind PW authentication, you can provide your username and password with the `-u` and `-p` options, respectively. You will also need to use an URL that starts with `http://eczyt.bg.pw.edu.pl/han/ibuk/`
-
-Example:
+To download a book and automatically convert it to a high-quality PDF:
 
 ```shell
-ibuk-dl -v download --output "podstawy-teorii-obwodow-tom-2.html" -u 123123 -p password http://eczyt.bg.pw.edu.pl/han/ibuk/https/libra.ibuk.pl/reader/podstawy-teorii-obwodow-tom-2-jerzy-osiowski-jerzy-szabatin-234596
+ibuk-dl <URL> -u <EMAIL> -p <PASSWORD>
 ```
 
-More information about `download`:
+This will:
+1. Download all pages to a temporary folder.
+2. Launch a headless Chrome/Chromium to render pages exactly as they appear (preserving fonts and layout).
+3. Merge them into a single PDF.
+4. Clean up the temporary files.
 
+### Options
+
+*   `--no-convert`: Skip the automatic PDF conversion (keep the downloaded HTML pages).
+*   `--keep`: Keep the folder with downloaded files (HTML/CSS) after successful PDF conversion.
+*   `--format`: Output format, default is `pdf`. Use `html` if you want raw concatenated HTML.
+*   `--page-count <N>`: Download only the first N pages.
+*   `--no-cover`: Skip downloading the cover image.
+*   `--firefox-cookies`: Use cookies from a running Firefox instance (via `browser_cookie3`) instead of username/password. Useful for SSO logins like PW.
+*   `--pw`: Use direct Politechnika Warszawska (PW) authentication. Use this with standard username/password if you need to access PW-restricted content directly.
+
+### Examples
+
+**Download full book as PDF:**
 ```shell
-ibuk-dl download --help
+ibuk-dl https://libra.ibuk.pl/reader/some-book -u user@example.com -p secret
 ```
 
-### Query Book Information
-
-To query book information, use the following command:
-
+**Download with PW Authentication:**
 ```shell
-ibuk-dl query <URL>
+ibuk-dl https://libra.ibuk.pl/reader/some-book -u YOUR_BOR_ID -p YOUR_PASSWORD --pw
 ```
 
-Example:
-
+**Download using Firefox cookies (if logged in via browser):**
 ```shell
-ibuk-dl -v query https://libra.ibuk.pl/reader/podstawy-teorii-obwodow-tom-2-jerzy-osiowski-jerzy-szabatin-234596
+ibuk-dl https://libra.ibuk.pl/reader/some-book --firefox-cookies
 ```
 
-More information about `query`:
-
+**Download only first 10 pages without converting:**
 ```shell
-ibuk-dl query --help
+ibuk-dl https://libra.ibuk.pl/reader/some-book -u user@example.com -p secret --page-count 10 --no-convert
 ```
 
-## Export to PDF
-
-This script will output HTML. If you want to have a PDF, you can use your browser's `Print -> Save to PDF` option.
 
 ## License
 
